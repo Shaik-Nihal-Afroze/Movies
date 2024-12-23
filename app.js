@@ -119,6 +119,7 @@ app.get('/directors/', async (request, response) => {
   )
 })
 
+// API 7
 app.get('/directors/:directorId/movies/', async (request, response) => {
   const {directorId} = params
   const getMoviesDirected = `
