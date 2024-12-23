@@ -113,19 +113,19 @@ app.get('/directors/', async (request, response) => {
     FROM director;`
   const getDirectorDetails = await db.all(getDirectorDetailsQuery)
   response.send(
-    getDirectorDetails.map(eachDirector => {
-      convertDirectorDetailsToDbObject(eachDirector)
-    }),
+    getDirectorDetails.map(eachDirector => ({
+      directorId: eachDirector.id,
+      directorName: eachDirector.director_name,
+    })),
   )
 })
 
-// API 7
 app.get('/directors/:directorId/movies/', async (request, response) => {
-  const {directorId} = params
+  const {directorId} = request.params
   const getMoviesDirected = `
-    SELEC movie_name as movieName
-    FROM Movie 
-    WHERE directorId:${directorId};
+    SELECT movie_name
+    FROM Movie NATURAL JOIN Director
+    WHERE director_id=${directorId};
   `
   const getDirectedMovieDetails = await db.all(getMoviesDirected)
   response.send(
